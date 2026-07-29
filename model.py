@@ -32,8 +32,36 @@ def impute_nan_with_mean(X):
 
     return result
 
-# Step 2 - compute_iqr_bounds (not yet solved)
-# TODO: implement
+# Step 2 - compute_iqr_bounds
+def compute_iqr_bounds(X, k=1.5):
+    # TODO: Compute per-column lower/upper clip bounds using the IQR rule.
+    """
+    Compute per-column lower and upper bounds using the IQR rule.
+
+    Args:
+        X : (N, F) array-like of numeric values.
+        k : Multiplier for the IQR (default = 1.5).
+
+    Returns:
+        lower : (F,) ndarray of lower bounds.
+        upper : (F,) ndarray of upper bounds.
+    """
+
+    # Convert input to NumPy float array
+    X= np.asarray(X, dtype=float)
+
+    # Compute the 25th and 75th percentiles for each column
+    q1= np.percentile(X,25, axis=0)
+    q3= np.percentile(X, 75, axis=0)
+
+    # Compute the Interquartile Range (IQR)
+    iqr=q3-q1
+
+    # Compute lower and upper bounds
+    lower= q1-k*iqr
+    upper=q3+k*iqr
+
+    return lower , upper
 
 # Step 3 - clip_columns (not yet solved)
 # TODO: implement
