@@ -63,8 +63,36 @@ def compute_iqr_bounds(X, k=1.5):
 
     return lower , upper
 
-# Step 3 - clip_columns (not yet solved)
-# TODO: implement
+# Step 3 - clip_columns
+def clip_columns(X, lower, upper):
+    # TODO: Clip every entry of a feature matrix to per-column lower/upper bounds.
+    """
+    Clip every entry of a feature matrix to per-column lower and upper bounds.
+
+    Args:
+        X : (N, F) array-like of numeric values.
+        lower : (F,) array of lower bounds.
+        upper : (F,) array of upper bounds.
+
+    Returns:
+        (N, F) ndarray with values clipped to the specified bounds.
+    """
+
+    # Convert inputs to NumPy arrays
+
+    X= np.asarray(X, dtype= float)
+    lower = np.asarray(lower, dtype= float)
+    upper = np.asarray(upper, dtype=float)
+
+    ##
+   ## np.clip() compares every value in each column with its corresponding lower and upper bound.
+##If a value is:
+##less than lower → replace with lower
+##greater than upper → replace with upper
+##otherwise → keep the original value.
+
+    # Return a new clipped array (does not modify X)
+    return np.clip(X, lower, upper)
 
 # Step 4 - make_ratio_feature (not yet solved)
 # TODO: implement
