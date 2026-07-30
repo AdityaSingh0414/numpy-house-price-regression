@@ -169,8 +169,16 @@ def fit_standardizer(X):
 
     return mean,std
 
-# Step 8 - apply_standardizer (not yet solved)
-# TODO: implement
+# Step 8 - apply_standardizer
+def apply_standardizer(X, mean, std):
+    # TODO: Return the scaled matrix (X - mean) / std via broadcasting.
+     # Convert inputs to NumPy arrays
+    X = np.asarray(X, dtype=float)
+    mean = np.asarray(mean, dtype=float)
+    std = np.asarray(std, dtype=float)
+
+    # Standardize
+    return (X - mean) / std
 
 # Step 9 - add_bias_column (not yet solved)
 # TODO: implement
