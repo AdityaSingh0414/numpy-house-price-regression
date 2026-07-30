@@ -121,12 +121,14 @@ def make_ratio_feature(numerator, denominator, eps=1e-8):
 import numpy as np
 
 def append_column(X, col):
+    # Convert inputs to NumPy arrays
     X = np.asarray(X, dtype=float)
     col = np.asarray(col, dtype=float)
 
     # Convert to column vector
     col = col.reshape(-1, 1)
 
+    # Append the column
     return np.hstack((X, col))
 
 # Step 6 - one_hot_encode (not yet solved)
