@@ -379,8 +379,26 @@ def prepare_cleaned_features(X, iqr_k=1.5):
     # Step 4: Return cleaned data
     return X_clean
 
-# Step 20 - assemble_feature_matrix (not yet solved)
-# TODO: implement
+# Step 20 - assemble_feature_matrix
+import numpy as np
+
+def assemble_feature_matrix(X_num, ratio_num_idx, ratio_den_idx, cat_labels=None):
+    # Step 1: Extract numerator and denominator columns
+    numerator = X_num[:, ratio_num_idx]
+    denominator = X_num[:, ratio_den_idx]
+
+    # Step 2: Create ratio feature
+    ratio = make_ratio_feature(numerator, denominator)
+
+    # Step 3: Append ratio column
+    X = append_column(X_num, ratio)
+
+    # Step 4: Add one-hot encoded categorical block if provided
+    if cat_labels is not None:
+        cat_block = one_hot_encode(cat_labels)
+        X = np.hstack((X, cat_block))
+
+    return X
 
 # Step 21 - make_train_val_test (not yet solved)
 # TODO: implement
