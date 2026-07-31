@@ -365,8 +365,19 @@ def residual_summary(y_true, y_pred):
         "median_abs": float(np.median(np.abs(residuals)))
     }
 
-# Step 19 - prepare_cleaned_features (not yet solved)
-# TODO: implement
+# Step 19 - prepare_cleaned_features
+def prepare_cleaned_features(X, iqr_k=1.5):
+    # Step 1: Replace NaN values
+    X_clean = impute_nan_with_mean(X)
+
+    # Step 2: Compute IQR bounds
+    lower, upper = compute_iqr_bounds(X_clean, iqr_k)
+
+    # Step 3: Clip outliers
+    X_clean = clip_columns(X_clean, lower, upper)
+
+    # Step 4: Return cleaned data
+    return X_clean
 
 # Step 20 - assemble_feature_matrix (not yet solved)
 # TODO: implement
