@@ -332,8 +332,26 @@ import numpy as np
 def root_mean_squared_error(y_true, y_pred):
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
-# Step 17 - r_squared (not yet solved)
-# TODO: implement
+# Step 17 - r_squared
+import numpy as np
+
+def r_squared(y_true, y_pred):
+    ss_res = np.sum((y_true - y_pred) ** 2)
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+
+    if ss_tot == 0:
+        return 0.0
+
+    return 1 - (ss_res / ss_tot)
+
+
+
+    ##1. Residual Sum of Squares (SS_res)
+    ##SSres​=∑(ytrue​−ypred​)2
+
+    ##2. Total Sum of Squares (SS_tot)
+    #Measures how much the actual values vary from their mean.
+    #SStot​=∑(ytrue​−yˉ​)2
 
 # Step 18 - residual_summary (not yet solved)
 # TODO: implement
