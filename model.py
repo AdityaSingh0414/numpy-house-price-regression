@@ -283,29 +283,11 @@ def subset_xy(X, y, indices):
 
 # Step 13 - ols_fit
 def ols_fit(X, y):
-    # TODO: return the ordinary-least-squares weight vector for a linear model.
-    """
-    Compute Ordinary Least Squares (OLS) weights.
-
-    Args:
-        X : (N, D) design matrix (includes bias column)
-        y : (N,) target vector
-
-    Returns:
-        theta : (D,) weight vector
-    """
-
-    # Convert inputs to NumPy arrays
     X = np.asarray(X, dtype=float)
     y = np.asarray(y, dtype=float)
 
-
-    # Normal equation components
-    A = X.T @ X
-    b = X.T @ y
-
-    # Solve A * theta = b
-    theta = np.linalg.solve(A, b)
+    # Use Moore-Penrose pseudo-inverse
+    theta = np.linalg.pinv(X) @ y
 
     return theta
 
@@ -482,6 +464,68 @@ def evaluate_predictions(y_true, y_pred):
         'residual_summary': residual_summary(y_true, y_pred)
     }
 
-# Step 24 - house_price_pipeline (not yet solved)
-# TODO: implement
+# Step 24 - house_price_pipeline
+def house_price_pipeline(
+    X,
+    y,
+    ratio_num_idx,
+    ratio_den_idx,
+    cat_labels=None,
+    train_ratio=0.7,
+    val_ratio=0.15,
+    seed=42,
+    iqr_k=1.5
+):
+    # Step 1: Clean numeric features
+    X = prepare_cleaned_features(X, iqr_k)
+
+    # Step 2: Assemble feature matrix
+    X = assemble_feature_matrix(
+        X,
+        ratio_num_idx,
+        ratio_den_idx,
+        cat_labels
+    )
+
+    # Step 3: Split data
+    splits = make_train_val_test(
+        X,
+        y,
+        train_ratio,
+        val_ratio,
+        seed
+    )
+
+    # Step 4: Standardize and add bias
+    std_splits, _, _ = standardize_and_add_bias(splits)
+
+    # Step 5: Fit OLS model
+    theta = ols_fit(
+        std_splits["X_train"],
+        std_splits["y_train"]
+    )
+
+    # Step 6: Predict
+    y_val_pred = ols_predict(std_splits["X_val"], theta)
+    y_test_pred = ols_predict(std_splits["X_test"], theta)
+
+    # Step 7: Evaluate
+    val_metrics = evaluate_predictions(
+        std_splits["y_val"],
+        y_val_pred
+    )
+
+    test_metrics = evaluate_predictions(
+        std_splits["y_test"],
+        y_test_pred
+    )
+
+    # Step 8: Return results
+    return {
+        "theta": theta,
+        "y_test": std_splits["y_test"],
+        "y_test_pred": y_test_pred,
+        "test_metrics": test_metrics,
+        "val_metrics": val_metrics
+    }
 
