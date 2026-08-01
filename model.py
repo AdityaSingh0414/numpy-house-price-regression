@@ -476,10 +476,9 @@ def house_price_pipeline(
     seed=42,
     iqr_k=1.5
 ):
-    # Step 1: Clean numeric features
+
     X = prepare_cleaned_features(X, iqr_k)
 
-    # Step 2: Assemble feature matrix
     X = assemble_feature_matrix(
         X,
         ratio_num_idx,
@@ -487,7 +486,6 @@ def house_price_pipeline(
         cat_labels
     )
 
-    # Step 3: Split data
     splits = make_train_val_test(
         X,
         y,
@@ -496,36 +494,27 @@ def house_price_pipeline(
         seed
     )
 
-    # Step 4: Standardize and add bias
     std_splits, _, _ = standardize_and_add_bias(splits)
 
-    # Step 5: Fit OLS model
     theta = ols_fit(
         std_splits["X_train"],
         std_splits["y_train"]
     )
 
-    # Step 6: Predict
     y_val_pred = ols_predict(std_splits["X_val"], theta)
     y_test_pred = ols_predict(std_splits["X_test"], theta)
 
-    # Step 7: Evaluate
-    val_metrics = evaluate_predictions(
-        std_splits["y_val"],
-        y_val_pred
-    )
-
-    test_metrics = evaluate_predictions(
-        std_splits["y_test"],
-        y_test_pred
-    )
-
-    # Step 8: Return results
     return {
         "theta": theta,
         "y_test": std_splits["y_test"],
         "y_test_pred": y_test_pred,
-        "test_metrics": test_metrics,
-        "val_metrics": val_metrics
+        "val_metrics": evaluate_predictions(
+            std_splits["y_val"],
+            y_val_pred
+        ),
+        "test_metrics": evaluate_predictions(
+            std_splits["y_test"],
+            y_test_pred
+        ),
     }
 
